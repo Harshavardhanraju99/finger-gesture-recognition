@@ -1,8 +1,8 @@
-#🎨 Virtual Painter – Hand Gesture Drawing Using OpenCV & Mediapipe
+# 🎨 Virtual Painter – Hand Gesture Drawing Using OpenCV & Mediapipe
 
 This project is a gesture-controlled virtual painting application that allows users to draw on a screen using their index finger, detected via a webcam. Built with OpenCV and Mediapipe, it provides an intuitive way to paint without needing a physical pen or touchscreen.
 
-#✨ Features
+# ✨ Features
 
 ✅ Hand Tracking: Detects and tracks fingers using Mediapipe Hands.
 
@@ -53,7 +53,7 @@ python virtual_painter.py
 
 4️⃣ Start drawing using your index finger! 🎨
 
-#🎯 How It Works
+# 🎯 How It Works
 
 Start the application – It opens two windows: the webcam feed and a blank canvas.
 
@@ -67,7 +67,7 @@ Clear the canvas – Tap the "CLEAR" button.
 
 Exit the application – Press q on your keyboard.
 
-#🔥 Future Enhancements
+# 🔥 Future Enhancements
 
 🖌️ Add custom brush sizes controlled via hand gestures.
 
@@ -77,7 +77,7 @@ Exit the application – Press q on your keyboard.
 
 📏 Add line thickness variation based on finger distance.
 
-#🤝 Contributing
+# 🤝 Contributing
 
 Contributions are welcome! If you'd like to improve this project, feel free to fork the repo, make changes, and submit a pull request.
 
