@@ -83,4 +83,5 @@ Contributions are welcome! If you'd like to improve this project, feel free to f
 
 📜 License
 
-This project is licensed under the MIT License.
+# This project is licensed under the MIT License.
+
