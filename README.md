@@ -4,6 +4,7 @@
 # 🎨 Virtual Painter – Hand Gesture Drawing Using OpenCV & Mediapipe
 
 This project is a gesture-controlled virtual painting application that allows users to draw on a screen using their index finger, detected via a webcam. Built with OpenCV and Mediapipe, it provides an intuitive way to paint without needing a physical pen or touchscreen.
+![Uploading Screenshot 2025-02-23 210218.png…]()
 
 # ✨ Features
 
