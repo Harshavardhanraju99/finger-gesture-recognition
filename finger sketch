@@ -1,0 +1,91 @@
+#created by harsha ardhan 
+import cv2
+import mediapipe as mp
+import numpy as np
+from collections import deque
+mpHands = mp.solutions.hands
+hands = mpHands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.8)
+mpDraw = mp.solutions.drawing_utils
+colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
+colorIndex = 0
+drawing = True
+paintWindow = np.ones((471, 636, 3), dtype=np.uint8) * 255
+cv2.namedWindow("Paint")
+bpoints = [deque(maxlen=1024)]
+gpoints = [deque(maxlen=1024)]
+rpoints = [deque(maxlen=1024)]
+ypoints = [deque(maxlen=1024)]
+points = [bpoints, gpoints, rpoints, ypoints]
+indexes = [0, 0, 0, 0]
+cap = cv2.VideoCapture(0)
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    frame = cv2.flip(frame, 1)  # Mirror effect
+    h, w, _ = frame.shape
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = hands.process(rgb_frame)
+    cv2.rectangle(frame, (40, 1), (140, 65), (122, 122, 122), -1)
+    cv2.rectangle(frame, (160, 1), (255, 65), colors[0], -1)
+    cv2.rectangle(frame, (275, 1), (370, 65), colors[1], -1)
+    cv2.rectangle(frame, (390, 1), (485, 65), colors[2], -1)
+    cv2.rectangle(frame, (505, 1), (600, 65), colors[3], -1)
+    cv2.putText(frame, "CLEAR", (55, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    cv2.putText(frame, "BLUE", (185, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    cv2.putText(frame, "GREEN", (300, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    cv2.putText(frame, "RED", (420, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    cv2.putText(frame, "YELLOW", (515, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (150, 150, 150), 2)
+
+    if results.multi_hand_landmarks:
+        for handLms in results.multi_hand_landmarks:
+            mpDraw.draw_landmarks(frame, handLms, mpHands.HAND_CONNECTIONS)
+            index_finger = handLms.landmark[8]  # Index Finger Tip
+            thumb_finger = handLms.landmark[4]  # Thumb Tip
+            x, y = int(index_finger.x * w), int(index_finger.y * h)
+            distance = np.sqrt((index_finger.x - thumb_finger.x) ** 2 + (index_finger.y - thumb_finger.y) ** 2)
+            if distance < 0.05:  # If fingers are close, stop drawing
+                drawing = False
+            else:
+                drawing = True
+
+            if y <= 65:  # Check if touching the buttons
+                if 40 <= x <= 140:  # Clear button
+                    for i in range(4):
+                        points[i] = [deque(maxlen=1024)]
+                        indexes[i] = 0
+                    paintWindow[:, :] = 255  # Reset canvas
+                elif 160 <= x <= 255:
+                    colorIndex = 0  # Blue
+                elif 275 <= x <= 370:
+                    colorIndex = 1  # Green
+                elif 390 <= x <= 485:
+                    colorIndex = 2  # Red
+                elif 505 <= x <= 600:
+                    colorIndex = 3  # Yellow
+            elif drawing:
+                points[colorIndex][indexes[colorIndex]].appendleft((x, y))
+    else:
+        for i in range(4):
+            points[i].append(deque(maxlen=1024))
+            indexes[i] += 1
+
+    # Draw on Canvas
+    for i in range(4):
+        for j in range(len(points[i])):
+            for k in range(1, len(points[i][j])):
+                if points[i][j][k - 1] is None or points[i][j][k] is None:
+                    continue
+                cv2.line(frame, points[i][j][k - 1], points[i][j][k], colors[i], 2)
+                cv2.line(paintWindow, points[i][j][k - 1], points[i][j][k], colors[i], 2)
+
+    # Show Windows
+    cv2.imshow("Virtual Painter", frame)
+    cv2.imshow("Paint", paintWindow)
+
+    # Exit Condition
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
