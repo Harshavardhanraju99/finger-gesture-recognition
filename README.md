@@ -1,4 +1,5 @@
-![Uploading image.png…]()
+
+# ![Screenshot 2025-02-23 210218](https://github.com/user-attachments/assets/c7deb944-ab4c-4985-8c6a-7a69c76a45b5)
 
 # 🎨 Virtual Painter – Hand Gesture Drawing Using OpenCV & Mediapipe
 
